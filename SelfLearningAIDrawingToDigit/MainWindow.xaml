@@ -5,23 +5,38 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SelfLearningAIDrawingToDigit"
         mc:Ignorable="d"
-        Title="Self Learnging AI Drawing To Digit" Height="420" Width="600" Background="#FF40AD23" ResizeMode="NoResize">
+        Title="Self Learnging AI Drawing To Digit" Height="450" Width="650" Background="#FF40AD23" ResizeMode="NoResize">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="77*"/>
+            <ColumnDefinition Width="43*"/>
+        </Grid.ColumnDefinitions>
         <Canvas x:Name="DigitCanvas" HorizontalAlignment="Left" VerticalAlignment="Top" Height="400
                 " Width="400" Background="#FF2CD4E8" Grid.ColumnSpan="2" MouseMove="DigitCanvas_MouseMove" MouseUp="DigitCanvas_MouseUp"/>
-        <Label x:Name="label" Content="Detected digit:" HorizontalAlignment="Left" Margin="400,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.477,0.672" Width="190" FontSize="24"/>
-        <Button x:Name="SetNumberButton0" Content="0" HorizontalAlignment="Left" Margin="405,183,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton0_Click"/>
-        <Button x:Name="SetNumberButton1" Content="1" HorizontalAlignment="Left" Margin="441,183,0,0" VerticalAlignment="Top" FontSize="22" Width="31" RenderTransformOrigin="2.512,0.502" Click="SetNumberButton1_Click"/>
-        <Button x:Name="SetNumberButton2" Content="2" HorizontalAlignment="Left" Margin="477,183,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton2_Click"/>
-        <Button x:Name="SetNumberButton3" Content="3" HorizontalAlignment="Left" Margin="513,183,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton3_Click"/>
-        <Button x:Name="SetNumberButton4" Content="4" HorizontalAlignment="Left" Margin="549,183,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton4_Click"/>
-        <Button x:Name="SetNumberButton5" Content="5" HorizontalAlignment="Left" Margin="405,221,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton5_Click"/>
-        <Button x:Name="SetNumberButton6" Content="6" HorizontalAlignment="Left" Margin="441,221,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton6_Click"/>
-        <Button x:Name="SetNumberButton7" Content="7" HorizontalAlignment="Left" Margin="477,221,0,0" VerticalAlignment="Top" FontSize="22" Width="31" RenderTransformOrigin="2.512,0.502" Click="SetNumberButton7_Click"/>
-        <Button x:Name="SetNumberButton8" Content="8" HorizontalAlignment="Left" Margin="513,221,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton8_Click"/>
-        <Button x:Name="SetNumberButton9" Content="9" HorizontalAlignment="Left" Margin="549,221,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton9_Click"/>
-        <Button x:Name="TrainAiButton" Content="Train AI" HorizontalAlignment="Left" Margin="405,294,0,0" VerticalAlignment="Top" Height="43" Width="185" Click="TrainAiButton_Click"/>
-        <Button x:Name="StopTrainingAiButton" Content="Stop Training" HorizontalAlignment="Left" Margin="405,342,0,0" VerticalAlignment="Top" Height="43" Width="185" Click="StopTrainingAiButton_Click"/>
-        <TextBox x:Name="DigitDetectedText" HorizontalAlignment="Left" Margin="410,57,0,0" TextWrapping="Wrap" Text="NULL" VerticalAlignment="Top" Width="185" Height="71" FontSize="48" TextAlignment="Center"/>
+        <Label x:Name="label" Content="Detected digit:" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.477,0.672" Width="190" FontSize="24" Grid.Column="1"/>
+        <Button x:Name="SetNumberButton0" Content="0" HorizontalAlignment="Left" Margin="20,183,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton0_Click" Grid.Column="1"/>
+        <Button x:Name="SetNumberButton1" Content="1" HorizontalAlignment="Left" Margin="56,183,0,0" VerticalAlignment="Top" FontSize="22" Width="31" RenderTransformOrigin="2.512,0.502" Click="SetNumberButton1_Click" Grid.Column="1"/>
+        <Button x:Name="SetNumberButton2" Content="2" HorizontalAlignment="Left" Margin="92,183,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton2_Click" Grid.Column="1" RenderTransformOrigin="0.234,0.563"/>
+        <Button x:Name="SetNumberButton3" Content="3" HorizontalAlignment="Left" Margin="128,183,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton3_Click" Grid.Column="1"/>
+        <Button x:Name="SetNumberButton4" Content="4" HorizontalAlignment="Left" Margin="164,183,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton4_Click" Grid.Column="1"/>
+        <Button x:Name="SetNumberButton5" Content="5" HorizontalAlignment="Left" Margin="20,221,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton5_Click" Grid.Column="1"/>
+        <Button x:Name="SetNumberButton6" Content="6" HorizontalAlignment="Left" Margin="56,221,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton6_Click" Grid.Column="1"/>
+        <Button x:Name="SetNumberButton7" Content="7" HorizontalAlignment="Left" Margin="92,221,0,0" VerticalAlignment="Top" FontSize="22" Width="31" RenderTransformOrigin="2.512,0.502" Click="SetNumberButton7_Click" Grid.Column="1"/>
+        <Button x:Name="SetNumberButton8" Content="8" HorizontalAlignment="Left" Margin="128,221,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton8_Click" Grid.Column="1"/>
+        <Button x:Name="SetNumberButton9" Content="9" HorizontalAlignment="Left" Margin="164,221,0,0" VerticalAlignment="Top" FontSize="22" Width="31" Click="SetNumberButton9_Click" Grid.Column="1"/>
+        <Button x:Name="TrainAiButton" Content="Train AI" HorizontalAlignment="Left" Margin="20,314,0,0" VerticalAlignment="Top" Height="43" Width="185" Click="TrainAiButton_Click" Grid.Column="1"/>
+        <Button x:Name="StopTrainingAiButton" Content="Stop Training / Save" HorizontalAlignment="Left" Margin="20,357,0,0" VerticalAlignment="Top" Height="43" Width="185" Click="StopTrainingAiButton_Click" Grid.Column="1"/>
+        <TextBox x:Name="DigitDetectedText" HorizontalAlignment="Left" Margin="20,57,0,0" TextWrapping="Wrap" Text="NULL" VerticalAlignment="Top" Width="185" Height="71" FontSize="48" TextAlignment="Center" Grid.Column="1"/>
+        <TextBox x:Name="GenerationText" HorizontalAlignment="Left" Margin="20,259,0,0" TextWrapping="Wrap" Text="Generation: 0" VerticalAlignment="Top" Width="185" Height="18" Grid.Column="1"/>
+        <TextBox x:Name="ScoreText" HorizontalAlignment="Left" Margin="20,282,0,0" TextWrapping="Wrap" Text="Score: 0/0" VerticalAlignment="Top" Width="185" Height="18" RenderTransformOrigin="0.5,0.5" Grid.Column="1">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="3.385"/>
+                    <RotateTransform/>
+                    <TranslateTransform X="-0.532"/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
     </Grid>
 </Window>

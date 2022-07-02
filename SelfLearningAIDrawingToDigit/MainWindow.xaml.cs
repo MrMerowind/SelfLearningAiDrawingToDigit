@@ -33,7 +33,12 @@ namespace SelfLearningAIDrawingToDigit
         {
             InitializeComponent();
             LoadData();
-            bigBrain = new BigBrain(DigitAnswersList, aiImage, DigitDetectedText);
+            bigBrain = new BigBrain(DigitAnswersList, aiImage, DigitDetectedText, GenerationText, ScoreText);
+            bigBrain.LoadBestBrain();
+
+            bigBrain.GetCalculatedDigitByBestBrain();
+            DigitDetectedText.FontSize = 48;
+            bigBrain.bestBrain.SetAnswer();
         }
 
         public static async Task SaveToFile(string text)
@@ -55,6 +60,7 @@ namespace SelfLearningAIDrawingToDigit
             }
 
             if (lines != null && lines.Length > 0)
+            {
                 foreach (string line in lines)
                 {
                     string[] stringDigits = line.Split(' ');
@@ -68,7 +74,10 @@ namespace SelfLearningAIDrawingToDigit
                             tmp.image.ImageTable[i, j] = Int32.Parse(stringDigits[i * 100 + j]) == 1;
                         }
                     }
+                    DigitAnswersList.Add(tmp);
                 }
+            }
+                
         }
 
         public void SaveData()
@@ -76,6 +85,7 @@ namespace SelfLearningAIDrawingToDigit
             string buffer = "";
             for (int i = 0; i < DigitAnswersList.Count; i++)
             {
+                if(i > 0) buffer += "\n";
                 buffer += DigitAnswersList[i].digit;
                 for (int j = 0; j < 100; j++)
                 {
@@ -144,7 +154,6 @@ namespace SelfLearningAIDrawingToDigit
             DigitAnswer tmp = new DigitAnswer(aiImage, 0);
             DigitAnswersList.Add(tmp);
             aiImage = new AiImage();
-            SaveData();
             DigitCanvas.Children.Clear();
             aiImage.Render(DigitCanvas);
         }
@@ -154,7 +163,6 @@ namespace SelfLearningAIDrawingToDigit
             DigitAnswer tmp = new DigitAnswer(aiImage, 1);
             DigitAnswersList.Add(tmp);
             aiImage = new AiImage();
-            SaveData();
             DigitCanvas.Children.Clear();
             aiImage.Render(DigitCanvas);
         }
@@ -164,7 +172,6 @@ namespace SelfLearningAIDrawingToDigit
             DigitAnswer tmp = new DigitAnswer(aiImage, 2);
             DigitAnswersList.Add(tmp);
             aiImage = new AiImage();
-            SaveData();
             DigitCanvas.Children.Clear();
             aiImage.Render(DigitCanvas);
         }
@@ -174,7 +181,6 @@ namespace SelfLearningAIDrawingToDigit
             DigitAnswer tmp = new DigitAnswer(aiImage, 3);
             DigitAnswersList.Add(tmp);
             aiImage = new AiImage();
-            SaveData();
             DigitCanvas.Children.Clear();
             aiImage.Render(DigitCanvas);
         }
@@ -184,7 +190,6 @@ namespace SelfLearningAIDrawingToDigit
             DigitAnswer tmp = new DigitAnswer(aiImage, 4);
             DigitAnswersList.Add(tmp);
             aiImage = new AiImage();
-            SaveData();
             DigitCanvas.Children.Clear();
             aiImage.Render(DigitCanvas);
         }
@@ -194,7 +199,6 @@ namespace SelfLearningAIDrawingToDigit
             DigitAnswer tmp = new DigitAnswer(aiImage, 5);
             DigitAnswersList.Add(tmp);
             aiImage = new AiImage();
-            SaveData();
             DigitCanvas.Children.Clear();
             aiImage.Render(DigitCanvas);
         }
@@ -204,7 +208,6 @@ namespace SelfLearningAIDrawingToDigit
             DigitAnswer tmp = new DigitAnswer(aiImage, 6);
             DigitAnswersList.Add(tmp);
             aiImage = new AiImage();
-            SaveData();
             DigitCanvas.Children.Clear();
             aiImage.Render(DigitCanvas);
         }
@@ -214,7 +217,6 @@ namespace SelfLearningAIDrawingToDigit
             DigitAnswer tmp = new DigitAnswer(aiImage, 7);
             DigitAnswersList.Add(tmp);
             aiImage = new AiImage();
-            SaveData();
             DigitCanvas.Children.Clear();
             aiImage.Render(DigitCanvas);
         }
@@ -224,7 +226,6 @@ namespace SelfLearningAIDrawingToDigit
             DigitAnswer tmp = new DigitAnswer(aiImage, 8);
             DigitAnswersList.Add(tmp);
             aiImage = new AiImage();
-            SaveData();
             DigitCanvas.Children.Clear();
             aiImage.Render(DigitCanvas);
         }
@@ -234,7 +235,6 @@ namespace SelfLearningAIDrawingToDigit
             DigitAnswer tmp = new DigitAnswer(aiImage, 9);
             DigitAnswersList.Add(tmp);
             aiImage = new AiImage();
-            SaveData();
             DigitCanvas.Children.Clear();
             aiImage.Render(DigitCanvas);
         }
@@ -244,7 +244,7 @@ namespace SelfLearningAIDrawingToDigit
             if(bigBrainThinkingBool == true)
             {
                 DigitDetectedText.Text = "Stop training";
-                DigitDetectedText.FontSize = 12;
+                DigitDetectedText.FontSize = 24;
             }
             else
             {
@@ -258,19 +258,29 @@ namespace SelfLearningAIDrawingToDigit
         {
             bigBrainThinkingBool = true;
             TrainAiButton.IsEnabled = false;
-            bigBrainThinkingThread = new Thread(BigBrainThinking);
-            bigBrainThinkingThread.Start();
+            if(true)
+            {
+                bigBrainThinkingThread = new Thread(BigBrainThinking);
+                bigBrainThinkingThread.Start();
+            }
+            
         }
 
         private void StopTrainingAiButton_Click(object sender, RoutedEventArgs e)
         {
+            // Thread is resumed after pause so no need to close
             bigBrainThinkingBool = false;
+            bigBrain.AbortLearning();
             while (bigBrainThinkingThread.IsAlive) ;
             TrainAiButton.IsEnabled = true;
             
 
             int result = bigBrain.GetCalculatedDigitByBestBrain();
             DigitDetectedText.FontSize = 48;
+
+            bigBrain.bestBrain.SetAnswer();
+            bigBrain.SaveBestBrain();
+            SaveData();
         }
 
         public void BigBrainThinking()
