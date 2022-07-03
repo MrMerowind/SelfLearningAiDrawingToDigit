@@ -41,6 +41,8 @@ namespace SelfLearningAIDrawingToDigit
             bigBrain.GetCalculatedDigitByBestBrain();
             DigitDetectedText.FontSize = 48;
             bigBrain.bestBrain.SetAnswer();
+
+            digitAnswersListLastSaveCount = DigitAnswersList.Count;
         }
 
         public void AppendToImagesFile(StreamWriter sw, string text)

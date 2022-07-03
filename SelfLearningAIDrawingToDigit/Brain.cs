@@ -23,6 +23,7 @@ namespace SelfLearningAIDrawingToDigit
         }
         public void LoadFirstNeuron(string data)
         {
+            if(data == null || data.Length == 0) return;
             string[] dataLines = data.Split(' ');
             DrawingX = Int32.Parse(dataLines[0]);
             DrawingY = Int32.Parse(dataLines[1]);
@@ -50,15 +51,19 @@ namespace SelfLearningAIDrawingToDigit
         public float OnTrue { get; set; } = 0.0f;
         public void GetSave(StreamWriter sw)
         {
-            sw.Write(OnTrue.ToString());
-            for(int i = 0; i < firstNeuronRefList.Count; i++)
+            if(firstNeuronRefList.Count > 0)
             {
-                sw.Write(";");
-                firstNeuronRefList[i].GetSave(sw);
+                sw.Write(OnTrue.ToString());
+                for (int i = 0; i < firstNeuronRefList.Count; i++)
+                {
+                    sw.Write(";");
+                    firstNeuronRefList[i].GetSave(sw);
+                }
             }
         }
         public void LoadSecondNeuron(string data)
         {
+            if (data == null || data.Length == 0 || data == "") return;
             string[] dataLines = data.Split(';');
             OnTrue = float.Parse(dataLines[0]);
             for(int i = 1; i < dataLines.Length; i++)
@@ -102,17 +107,10 @@ namespace SelfLearningAIDrawingToDigit
         }
         public void GetSave(StreamWriter sw)
         {
-            int secondNeuronLength = 0;
-            foreach (SecondNeuron secondNeuron in secondNeuronRefTab)
-                if (secondNeuron != null) secondNeuronLength++;
-
-
-            for (int i = 0, skip = 0; i < secondNeuronRefTab.Length; i++, skip = 1)
+            for (int i = 0; i < secondNeuronRefTab.Length; i++)
             {
-                while (i < secondNeuronRefTab.Length && secondNeuronRefTab[i] == null) i++;
-                if (i >= secondNeuronRefTab.Length) return;
-                if (skip != 0) sw.Write("|");
-                secondNeuronRefTab[i].GetSave(sw);
+                if (i > 0) sw.Write("|");
+                if (secondNeuronRefTab[i] != null) secondNeuronRefTab[i].GetSave(sw);
             }
         }
         public void LoadThirdNeuron(string data)
@@ -120,8 +118,11 @@ namespace SelfLearningAIDrawingToDigit
             string[] dataLines = data.Split('|');
             for(int i = 0; i < 10; i++)
             {
-                secondNeuronRefTab[i] = new SecondNeuron();
-                secondNeuronRefTab[i].LoadSecondNeuron(dataLines[i]);
+                if(dataLines[i] != null && dataLines[i] != "")
+                {
+                    secondNeuronRefTab[i] = new SecondNeuron();
+                    secondNeuronRefTab[i].LoadSecondNeuron(dataLines[i]);
+                }
             }
         }
         public int GetHighestDigit(AiImage img)
@@ -273,6 +274,7 @@ namespace SelfLearningAIDrawingToDigit
 
         public void SaveBestBrain()
         {
+            if (bestBrain == null) return;
             bestBrain.SaveBrain();
         }
         
