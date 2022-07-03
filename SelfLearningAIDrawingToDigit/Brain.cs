@@ -18,11 +18,9 @@ namespace SelfLearningAIDrawingToDigit
         {
             return (FirstNeuron) this.MemberwiseClone();
         }
-        public string GetSave()
+        public void GetSave(StreamWriter sw)
         {
-            string buffer = "";
-            buffer += DrawingX.ToString() + " " + DrawingY.ToString() + " " + OnTrue.ToString();
-            return buffer;
+            sw.Write(DrawingX.ToString() + " " + DrawingY.ToString() + " " + OnTrue.ToString());
         }
         public void LoadFirstNeuron(string data)
         {
@@ -52,15 +50,14 @@ namespace SelfLearningAIDrawingToDigit
         public List<FirstNeuron> firstNeuronRefList = new List<FirstNeuron>();
         public float OnTrue { get; set; } = 0.0f;
         public float OnFalse { get; set; } = 0.0f;
-        public string GetSave()
+        public void GetSave(StreamWriter sw)
         {
-            string buffer = "";
-            buffer += OnTrue.ToString();
+            sw.Write(OnTrue.ToString());
             for(int i = 0; i < firstNeuronRefList.Count; i++)
             {
-                buffer += ";" + firstNeuronRefList[i].GetSave();
+                sw.Write(";");
+                firstNeuronRefList[i].GetSave(sw);
             }
-            return buffer;
         }
         public void LoadSecondNeuron(string data)
         {
@@ -105,15 +102,13 @@ namespace SelfLearningAIDrawingToDigit
             }
             return result;
         }
-        public string GetSave()
+        public void GetSave(StreamWriter sw)
         {
-            string buffer = "";
-            for(int i = 0; i < secondNeuronRefTab.Length; i++)
+            for (int i = 0; i < secondNeuronRefTab.Length; i++)
             {
-                if (i > 0) buffer += "|";
-                buffer += secondNeuronRefTab[i].GetSave();
+                if (i > 0) sw.Write("|");
+                secondNeuronRefTab[i].GetSave(sw);
             }
-            return buffer;
         }
         public void LoadThirdNeuron(string data)
         {
@@ -169,11 +164,14 @@ namespace SelfLearningAIDrawingToDigit
         }
         public void SaveBrain()
         {
-            string buffer = "";
-            buffer += bestBrainGeneration.ToString();
-            buffer += "\n";
-            buffer += thirdNeuron.GetSave();
-            File.WriteAllTextAsync("SavedNeuralNetwork.ini", buffer);
+            File.WriteAllTextAsync("SavedNeuralNetwork.ini", "");
+
+            using (StreamWriter sw = File.AppendText("SavedNeuralNetwork.ini"))
+            {
+                sw.Write(bestBrainGeneration.ToString());
+                sw.Write("\n");
+                thirdNeuron.GetSave(sw);
+            }
         }
         public void LoadBrain()
         {
@@ -279,6 +277,7 @@ namespace SelfLearningAIDrawingToDigit
         {
             bestBrain = new Brain(textBox,img,scoreTextBox,generationTextBox);
             bestBrain.LoadBrain();
+            bestBrainGeneration = bestBrain.bestBrainGeneration;
         }
 
         public BigBrain(List<DigitAnswer> digitAnswersList, AiImage a, TextBox t, TextBox tg, TextBox ts)

@@ -25,6 +25,8 @@ namespace SelfLearningAIDrawingToDigit
         public AiImage aiImage = new AiImage();
         public List<DigitAnswer> DigitAnswersList = new List<DigitAnswer>();
 
+        private int digitAnswersListLastSaveCount = 0;
+
         public Thread bigBrainThinkingThread = null;
         public bool bigBrainThinkingBool = false;
 
@@ -41,9 +43,9 @@ namespace SelfLearningAIDrawingToDigit
             bigBrain.bestBrain.SetAnswer();
         }
 
-        public static async Task SaveToFile(string text)
+        public void AppendToImagesFile(StreamWriter sw, string text)
         {
-            await File.WriteAllTextAsync("SavedImagesWithAnswers.ini", text);
+            sw.Write(text);
         }
 
         public void LoadData()
@@ -82,10 +84,19 @@ namespace SelfLearningAIDrawingToDigit
 
         public void SaveData()
         {
-            string buffer = "";
+            if(digitAnswersListLastSaveCount == DigitAnswersList.Count)
+            {
+                return;
+            }
+            digitAnswersListLastSaveCount = DigitAnswersList.Count;
+
+
+            File.WriteAllText("SavedImagesWithAnswers.ini", "");
+            StreamWriter sw = File.AppendText("SavedImagesWithAnswers.ini");
             for (int i = 0; i < DigitAnswersList.Count; i++)
             {
-                if(i > 0) buffer += "\n";
+                string buffer = "";
+                if (i > 0) buffer += "\n";
                 buffer += DigitAnswersList[i].digit;
                 for (int j = 0; j < 100; j++)
                 {
@@ -102,8 +113,10 @@ namespace SelfLearningAIDrawingToDigit
 
                     }
                 }
+                AppendToImagesFile(sw, buffer);
             }
-            SaveToFile(buffer);
+            sw.Close();
+            
         }
 
         private void DigitCanvas_MouseMove(object sender, MouseEventArgs e)
@@ -258,7 +271,9 @@ namespace SelfLearningAIDrawingToDigit
         {
             bigBrainThinkingBool = true;
             TrainAiButton.IsEnabled = false;
-            if(true)
+            StopTrainingAiButton.IsEnabled = true;
+            SaveButton.IsEnabled = false;
+            if (true)
             {
                 bigBrainThinkingThread = new Thread(BigBrainThinking);
                 bigBrainThinkingThread.Start();
@@ -270,17 +285,16 @@ namespace SelfLearningAIDrawingToDigit
         {
             // Thread is resumed after pause so no need to close
             bigBrainThinkingBool = false;
+            StopTrainingAiButton.IsEnabled = false;
             bigBrain.AbortLearning();
             while (bigBrainThinkingThread.IsAlive) ;
             TrainAiButton.IsEnabled = true;
+            SaveButton.IsEnabled = true;
             
 
             int result = bigBrain.GetCalculatedDigitByBestBrain();
             DigitDetectedText.FontSize = 48;
-
             bigBrain.bestBrain.SetAnswer();
-            bigBrain.SaveBestBrain();
-            SaveData();
         }
 
         public void BigBrainThinking()
@@ -290,6 +304,12 @@ namespace SelfLearningAIDrawingToDigit
                 bigBrain.LearnOneGeneration();
             }
 
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            bigBrain.SaveBestBrain();
+            SaveData();
         }
     }
 }
