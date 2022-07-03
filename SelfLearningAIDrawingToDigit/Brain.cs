@@ -13,7 +13,6 @@ namespace SelfLearningAIDrawingToDigit
         public int? DrawingX { get; set; }
         public int? DrawingY { get; set; }
         public float OnTrue { get; set; } = 0.0f;
-        public float OnFalse { get; set; } = 0.0f;
         public FirstNeuron GetCloned()
         {
             return (FirstNeuron) this.MemberwiseClone();
@@ -41,7 +40,7 @@ namespace SelfLearningAIDrawingToDigit
             }
             else
             {
-                return OnFalse;
+                return 0.0f;
             }
         }
     }
@@ -49,7 +48,6 @@ namespace SelfLearningAIDrawingToDigit
     {
         public List<FirstNeuron> firstNeuronRefList = new List<FirstNeuron>();
         public float OnTrue { get; set; } = 0.0f;
-        public float OnFalse { get; set; } = 0.0f;
         public void GetSave(StreamWriter sw)
         {
             sw.Write(OnTrue.ToString());
@@ -73,7 +71,6 @@ namespace SelfLearningAIDrawingToDigit
         {
             SecondNeuron result = new SecondNeuron();
             result.OnTrue = OnTrue;
-            result.OnFalse = OnFalse;
             for(int i = 0; i < firstNeuronRefList.Count; i++)
             {
                 result.firstNeuronRefList.Add(firstNeuronRefList[i].GetCloned());
@@ -87,7 +84,8 @@ namespace SelfLearningAIDrawingToDigit
             {
                 sum += firstNeuronRefList[i].Calculate(img);
             }
-            return sum;
+            if (sum > 0.0f) return OnTrue;
+            else return 0.0f;
         }
     }
     public class ThirdNeuron
@@ -104,9 +102,16 @@ namespace SelfLearningAIDrawingToDigit
         }
         public void GetSave(StreamWriter sw)
         {
-            for (int i = 0; i < secondNeuronRefTab.Length; i++)
+            int secondNeuronLength = 0;
+            foreach (SecondNeuron secondNeuron in secondNeuronRefTab)
+                if (secondNeuron != null) secondNeuronLength++;
+
+
+            for (int i = 0, skip = 0; i < secondNeuronRefTab.Length; i++, skip = 1)
             {
-                if (i > 0) sw.Write("|");
+                while (i < secondNeuronRefTab.Length && secondNeuronRefTab[i] == null) i++;
+                if (i >= secondNeuronRefTab.Length) return;
+                if (skip != 0) sw.Write("|");
                 secondNeuronRefTab[i].GetSave(sw);
             }
         }
@@ -218,7 +223,7 @@ namespace SelfLearningAIDrawingToDigit
 
             for (int i = 0; i < dA.Count; i++)
             {
-                if (dA[i].digit == GetAnswer(img))
+                if (dA[i].digit == GetAnswer(dA[i].image))
                 {
                     score++;
                 }
@@ -233,7 +238,6 @@ namespace SelfLearningAIDrawingToDigit
             if (a == null) a = thirdNeuron.secondNeuronRefTab[randomNumber] = new SecondNeuron();
             a.OnTrue = (float)rnd.NextDouble();
             if (rnd.Next(2) == 1) a.OnTrue = -a.OnTrue;
-            a.OnFalse = 0.0f;
 
             FirstNeuron b;
 
@@ -249,7 +253,6 @@ namespace SelfLearningAIDrawingToDigit
 
             b.OnTrue = (float)rnd.NextDouble();
             if (rnd.Next(2) == 1) b.OnTrue = -b.OnTrue;
-            b.OnFalse = 0.0f;
 
             b.DrawingX = rnd.Next(100);
             b.DrawingY = rnd.Next(100);
@@ -296,8 +299,8 @@ namespace SelfLearningAIDrawingToDigit
             {
                 bestBrain = new Brain(textBox, img, scoreTextBox, generationTextBox);
             }
-            brains.Clear();
-            for(int i = 0; i < 50; i++)
+            brains = new List<Brain>();
+            for(int i = 0; i < 1000; i++)
             {
                 brains.Add((Brain) this.bestBrain.GetCloned());
                 brains[brains.Count - 1].GeneticModification();
